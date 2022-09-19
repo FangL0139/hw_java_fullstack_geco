@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Get Age Assignment</title>
+  <script>
+    function get_age() {
+      let date_in = document.getElementById("dob").value;
+      let date = new Date(date_in);
+      let diff = new Date() - date;
+      let age_dt = new Date(diff);
+      let year = age_dt.getUTCFullYear();
+      let age = Math.abs(year - 1970);
+
+      document.getElementById("age").innerHTML = "Age: " + age;
+    }
+
+  </script>
+</head>
+
+<body>
+  <input type="date" id="dob">
+  <button type="button" value="submit" onclick="get_age()">Get the Age!</button>
+  <h1 id="age"></h1>
+</body>
+
+</html>
