@@ -1,5 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter as Router, Route, Routes,  } from 'react-router-dom';
+import Home from './Home';
+import About from './About';
+import Contact from './Contact';
 
 function App() {
   return (
@@ -19,7 +23,14 @@ function App() {
     //     </a>
     //   </header>
     // </div>
-    <><h2 className="Title">Hello React World</h2>
+    <><h2 className="Title">Hello ReactWorld AppJs</h2>
+    <Router>
+      <Routes>
+        <Route path='/home' element={<Home/>}></Route>
+        <Route path='/about' element={<About/>}></Route>
+        <Route path='/contact' element={<Contact/>}></Route>
+      </Routes>
+    </Router>
     </>
   );
 }
