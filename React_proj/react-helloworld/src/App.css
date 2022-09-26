@@ -61,11 +61,13 @@
 .Contact-form {
   text-align: center;
   margin: 1% auto;
+  width: 80%;
 }
 
 .Contact-form input {
-  width: 30%;
-  margin: 0.5%;
+  width: 40%;
+  margin: 0.5% 0;
+  border: 1px solid black;
 }
 
 .Contact-form label {
@@ -74,16 +76,16 @@
 }
 
 .Contact-form .Message_box {
-  border: #000000;
-  width: 30.5%;
-  display: inline-block;
+  width: 40%;
+  margin: 0 auto;
+  border: 1px solid black;
 }
 
 .Message_box textarea {
-  float: left;
-  width: 99%;
-  height: 133px;
-  margin: 0.5%;
+  height: 10em;
+  width: 100%;
+  display: block;
+
 }
 
 #submit_btn {
