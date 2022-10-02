@@ -3,11 +3,9 @@ import Footer from './Footer'
 import Header from './Header'
 
 const Contact = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [subject, setSubject] = useState("");
-
-
+  // const [name, setName] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [subject, setSubject] = useState("");
 
   return (
     <div id="page">
@@ -31,9 +29,9 @@ const Contact = () => {
           <div className="contact">
             <h1>INQUIRY FORM</h1>
             <form action="/home">
-              <input type="text" name="Name" onChange={(e) => setName(e.target.value == "" ? 'Name' : e.target.value)} onFocus={(e) => e.target.select()} placeholder="Name"></input>
-              <input type="text" name="Email" onChange={(e) => setEmail(e.target.value == "" ? 'Email' : e.target.value)} onFocus={(e) => e.target.select()} placeholder="Email"></input>
-              <input type="text" name="Subject" onChange={(e) => setSubject(e.target.value == "" ? 'Subject' : e.target.value)} onFocus={(e) => e.target.select()} placeholder="Subject"></input>
+              <input type="text" name="Name" Value="Name" onBlur={(e) => e.target.value = !e.target.value ? "Name" : e.target.value} onFocus={(e) => e.target.select()} onClick={(e) => e.target.value = ""}></input>
+              <input type="text" name="Email" Value="Email" onBlur={(e) => e.target.value = !e.target.value ? "Email" : e.target.value} onFocus={(e) => e.target.select()} onClick={(e) => e.target.value = ""}></input>
+              <input type="text" name="Subject" Value="Subject" onBlur={(e) => e.target.value = !e.target.value ? "Subject" : e.target.value} onFocus={(e) => e.target.select()} onClick={(e) => e.target.value = ""}></input>
               <textarea name="meassage" cols="50" rows="7">Share your thoughts</textarea>
               <input type="submit" value="Send" id="submit"></input>
             </form>
