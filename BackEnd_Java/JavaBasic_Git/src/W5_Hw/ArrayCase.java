@@ -12,7 +12,7 @@ public class ArrayCase {
             example.printNum(arr,num1);
             example.printNum(arr,num2);
         } catch (Exception e) {
-            e.getStackTrace();
+            e.printStackTrace();
             System.out.println(e.getMessage());
         }
     }
