@@ -5,10 +5,7 @@ import hw.weekly.spring_wk5.request.MathRequest;
 import hw.weekly.spring_wk5.request.UserRequest;
 import hw.weekly.spring_wk5.response.GeneralResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -52,6 +49,7 @@ public class MathController {
 
     }
 
+//    @CrossOrigin
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody UserRequest user) {
         String userName = user.getUserName();

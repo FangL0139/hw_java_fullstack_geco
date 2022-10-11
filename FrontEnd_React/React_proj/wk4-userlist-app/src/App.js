@@ -6,6 +6,8 @@ import ConditionalArr from './ConditionalArr';
 import GetApi from './GetApi';
 import NewHome from './NewHome';
 import NewArray from './NewArray';
+import Login from './Login';
+import GetUser from './GetUser';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
           <Route path='/getapi' element={<GetApi />}></Route>
           <Route path='/newhome' element={<NewHome />}></Route>
           <Route path='/newarray' element={<NewArray />}></Route>
+          <Route path='/login' element={<Login />}></Route>
+          <Route path='/getuser' element={<GetUser />}></Route>
         </Routes>
       </Router>
     </div>
