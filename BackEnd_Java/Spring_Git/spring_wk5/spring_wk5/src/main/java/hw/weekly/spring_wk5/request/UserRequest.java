@@ -10,9 +10,18 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRequest {
-    Integer id;
-    String userName;
-    String password;
-    String add;
 
+
+    Integer id;
+    String name;
+    String email;
+    String password;
+    String address;
+    String mobile;
+    public UserRequest(Integer id, String email, String password, String address) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+    }
 }

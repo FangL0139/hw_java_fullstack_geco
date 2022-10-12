@@ -3,24 +3,24 @@ import './App.css';
 import Header from './Header';
 
 const Login = () => {
-  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [resObj, setResObj] = useState();
 
   const btn_click = () => {
     // console.log(userName,password);
-    if (userName == undefined || userName == "") {
-      alert("Please enter the UserName");
+    if (email == undefined || email == "") {
+      alert("Please enter the email");
     } else if (password == undefined || password == "") {
       alert("Please enter the password");
     } else {
-      post_Api("http://localhost:8080/login");
+      post_Api("http://localhost:8080/user/login");
     }
   }
 
   const post_Api = (url) => {
     let param = {
-      "userName": userName,
+      "email": email,
       "password": password,
     };
 
@@ -29,17 +29,25 @@ const Login = () => {
       body: JSON.stringify(param),
       headers: { "Content-Type": "application/json" },
     })
-      .then((res) => res.json())
-      .then((res2) => {
-        setResObj(res2);
-        console.log(res2);
-        // setUserName("");
-        // setPassword("");
+      .then((res) => {
+        if (!res.ok) {
+          throw res
+        } else {
+          res.json()
+            .then((res2) => {
+              setResObj(res2);
+              // console.log(res2);
+              // setUserName("");
+              // setPassword("");
+            })
+        }
       })
       .catch((err) => {
-        console.log(err);
+        err.json().then(e => { setResObj(e); console.log(e); })
+        // console.log(err);
+        // alert("error");
       });
-    setUserName("");
+    setEmail("");
     setPassword("");
   }
 
@@ -50,10 +58,10 @@ const Login = () => {
       <h2>This is Login.</h2>
       <form className="PostForm">
         <div>
-          <label>UserName</label>
+          <label>Email</label>
         </div>
         <div>
-          <input value={userName} onChange={(e) => setUserName(e.target.value)} type="text" placeholder="Enter UserName"></input>
+          <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Enter UserName"></input>
         </div>
         <div>
           <label>Password</label>

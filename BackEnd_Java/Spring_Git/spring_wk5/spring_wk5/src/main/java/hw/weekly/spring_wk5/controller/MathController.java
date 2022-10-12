@@ -52,14 +52,14 @@ public class MathController {
 //    @CrossOrigin
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody UserRequest user) {
-        String userName = user.getUserName();
+        String userName = user.getEmail();
         String password = user.getPassword();
 
         try {
             ArrayList<UserRequest> allUsers = new UserData().getAllUsers();
 
             for (UserRequest tempUser : allUsers) {
-                if (userName.equals(tempUser.getUserName()) && password.equals(tempUser.getPassword())) {
+                if (userName.equals(tempUser.getEmail()) && password.equals(tempUser.getPassword())) {
                     return ResponseEntity.ok(new GeneralResponse("Login successfully!"));
                 }
             }

@@ -24,6 +24,8 @@ function Header(props) {
       <li><a className={props.navbar == "newarray" ? "active" : ""} href="newarray">New Conditional Array</a></li>
       <li><a className={props.navbar == "login" ? "active" : ""} href="login">Login</a></li>
       <li><a className={props.navbar == "getuser" ? "active" : ""} href="getuser">Get User</a></li>
+      <li><a className={props.navbar == "register" ? "active" : ""} href="register">Register</a></li>
+      <li><a className={props.navbar == "listuser" ? "active" : ""} href="listuser">List User</a></li>
       {isExist ? <li><a href="#logout">Log Out</a></li> : null}
     </ul>
   );

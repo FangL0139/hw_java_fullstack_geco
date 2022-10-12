@@ -8,6 +8,8 @@ import NewHome from './NewHome';
 import NewArray from './NewArray';
 import Login from './Login';
 import GetUser from './GetUser';
+import Register from './Register';
+import ListUser from './ListUser';
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
           <Route path='/newarray' element={<NewArray />}></Route>
           <Route path='/login' element={<Login />}></Route>
           <Route path='/getuser' element={<GetUser />}></Route>
+          <Route path='/register' element={<Register />}></Route>
+          <Route path='/listuser' element={<ListUser />}></Route>
         </Routes>
       </Router>
     </div>

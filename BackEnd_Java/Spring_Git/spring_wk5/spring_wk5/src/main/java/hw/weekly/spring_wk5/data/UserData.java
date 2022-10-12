@@ -12,7 +12,8 @@ import java.util.Map;
 @Repository
 @Getter
 public class UserData {
-    UserRequest user1 = new UserRequest(1,"john@gmail.com", "John-1", "Chicago");
+    UserRequest user1 = new
+            UserRequest(1,"john@gmail.com", "John-1", "Chicago");
     UserRequest user2 = new UserRequest(2,"anton@gmail.com", "Anton-1", "Berlin");
     UserRequest user3 = new UserRequest(3,"shinji@gmail.com", "Shinji-1", "Kyoto");
     UserRequest user4 = new UserRequest(4,"auyeong@gmail.com", "Au Yeong-2", "Hong Kong");
