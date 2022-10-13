@@ -25,6 +25,7 @@ const ListUser = () => {
         } else {
           res.json()
             .then((res2) => {
+              setId(res2[0].id);
               setUserList(res2);
               // console.log(res2);
             })
@@ -39,7 +40,7 @@ const ListUser = () => {
     getAllUser();
     // setUser(userList[0]);
     // createOptions(userList);
-  }, [resObj]);
+  }, []);
 
   const updateUser = () => {
     let param = {
@@ -63,6 +64,7 @@ const ListUser = () => {
           res.json()
             .then((res2) => {
               setResObj(res2);
+              getAllUser();
               // console.log(res2);
             })
         }
