@@ -42,6 +42,16 @@ public class UserController {
         }
     }
 
+    @GetMapping("logout")
+    public ResponseEntity<?> logout(@RequestHeader Integer userId){
+        try {
+            userService.logout(userId);
+            return ResponseEntity.ok(new GeneralResponse("Logout successfully!"));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(new GeneralResponse(e.getMessage()));
+        }
+    }
+
     @PostMapping("register")
     public ResponseEntity<?> userRegister(@RequestBody UserRequest userRequest) {
         try {

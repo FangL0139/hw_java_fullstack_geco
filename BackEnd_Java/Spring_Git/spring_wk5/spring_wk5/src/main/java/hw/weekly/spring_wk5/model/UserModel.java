@@ -21,5 +21,6 @@ public class UserModel {
     String address;
     @JsonIgnore
     String password;
+    String token;
 
 }

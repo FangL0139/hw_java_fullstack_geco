@@ -7,6 +7,7 @@ import hw.weekly.spring_wk5.request.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,10 +31,49 @@ public class UserService {
     public UserModel loginValidate(String email, String password) throws Exception {
         Optional<UserModel> userOpt = userRepo.getUserByEmailAndPassword(email, password);
         if (userOpt.isPresent()) {
-            return userOpt.get();
+            UserModel user = userOpt.get();
+            String token = genTokenForEmail(email);
+            updateTokenById(token, user.getId());
+            user.setToken(token);
+            return user;
         } else {
-            throw new Exception("Please provide correct Username and Password.");
+            throw new Exception("Please provide correct Email and Password.");
         }
+    }
+
+    private String genTokenForEmail(String email) {
+        String emailEncoded = Base64.getEncoder().encodeToString(email.getBytes());
+        String token = emailEncoded + System.currentTimeMillis();
+        return token;
+    }
+
+    private void updateTokenById(String token, Integer userId) throws Exception {
+        try {
+            userRepo.updateTokenByUserId(token, userId);
+        }catch (Exception e){
+            throw new Exception("Update fail");
+        }
+    }
+
+//    Another way to validate
+//    public boolean validateToken(String token, Integer userId) throws Exception {
+//        UserModel user = userRepo.getUserByUserIdAndToken(token, userId).orElseThrow(
+//                ()->new Exception("Please enter correct token and user ID"));
+//        return true;
+//    }
+
+    public boolean validateToken(String token, Integer userId) throws Exception {
+        UserModel user = userRepo.findById(userId).orElseThrow(
+                () -> new Exception("UserID not found"));
+        if (user.getToken().equals(token)) {
+            return true;
+        } else {
+            throw new Exception("Token not match");
+        }
+    }
+
+    public void logout(Integer userId) throws Exception {
+        updateTokenById("", userId);
     }
 
     public void createUser(UserRequest userRequest) throws Exception {
@@ -59,33 +99,33 @@ public class UserService {
         return userRepo.findAll();
     }
 
-    public boolean updateUser(UserRequest userRequest) throws  Exception{
-        try{
+    public boolean updateUser(UserRequest userRequest) throws Exception {
+        try {
             //java 8 optional
             Optional<UserModel> userOpt = userRepo.findById(userRequest.getId());//get the data bases on primary key
 
             //user is exist
-            if(userOpt.isPresent()){
+            if (userOpt.isPresent()) {
                 UserModel userTmp = userOpt.get();//get the exsiting data using id
-                if(userRequest.getName() != null && !userRequest.getName().equals("")){
+                if (userRequest.getName() != null && !userRequest.getName().equals("")) {
                     userTmp.setName(userRequest.getName());
                 }
-                if(userRequest.getPassword() != null && !userRequest.getPassword().equals("")){
+                if (userRequest.getPassword() != null && !userRequest.getPassword().equals("")) {
                     userTmp.setPassword(userRequest.getPassword());
                 }
-                if(userRequest.getEmail() != null && !userRequest.getEmail().equals("")){
+                if (userRequest.getEmail() != null && !userRequest.getEmail().equals("")) {
                     userTmp.setEmail(userRequest.getEmail());
                 }
-                if(userRequest.getMobile() != null && !userRequest.getMobile().equals("")){
+                if (userRequest.getMobile() != null && !userRequest.getMobile().equals("")) {
                     userTmp.setMobile(userRequest.getMobile());
                 }
-                if(userRequest.getAddress() != null && !userRequest.getAddress().equals("")){
+                if (userRequest.getAddress() != null && !userRequest.getAddress().equals("")) {
                     userTmp.setAddress(userRequest.getAddress());
                 }
                 userRepo.save(userTmp);//update the data as it has Primary key
                 return true;
-            }else{
-                throw  new Exception("user is not found");
+            } else {
+                throw new Exception("user is not found");
             }
 
             /*
@@ -105,15 +145,15 @@ public class UserService {
             //2nd syntax end
             */
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
     }
 
-    public boolean deleteUser(Integer userId) throws Exception{
+    public boolean deleteUser(Integer userId) throws Exception {
         //java 8 optional
-        UserModel userTmp = userRepo.findById(userId).orElseThrow(()->new Exception("No user found"));//get the data bases on primary key
+        UserModel userTmp = userRepo.findById(userId).orElseThrow(() -> new Exception("No user found"));//get the data bases on primary key
         userRepo.delete(userTmp);
         return true;
     }
