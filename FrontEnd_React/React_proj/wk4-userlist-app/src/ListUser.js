@@ -17,8 +17,19 @@ const ListUser = () => {
   const [address, setAddress] = useState("");
   const [mobile, setMobile] = useState("");
 
+  let userId = localStorage.getItem("userId");
+  let token = localStorage.getItem("token");
+
+
   const getAllUser = () => {
-    fetch("http://localhost:8080/user/listuser")
+
+    fetch("http://localhost:8080/user/listuser", {
+      headers: {
+        "content-type": "application/json",
+        "token": token,
+        "userId": userId
+      }
+    })
       .then((res) => {
         if (!res.ok) {
           throw res
@@ -55,7 +66,11 @@ const ListUser = () => {
     fetch("http://localhost:8080/user/update", {
       method: "POST",
       body: JSON.stringify(param),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "token": token,
+        "userId": userId
+      },
     })
       .then((res) => {
         if (!res.ok) {
@@ -80,7 +95,13 @@ const ListUser = () => {
   }
 
   const deleteUser = (id) => {
-    fetch("http://localhost:8080/user/delete/" + id)
+    fetch("http://localhost:8080/user/delete/" + id, {
+      headers: {
+        "content-type": "application/json",
+        "token": token,
+        "userId": userId
+      }
+    })
       .then((res) => {
         if (!res.ok) {
           throw res

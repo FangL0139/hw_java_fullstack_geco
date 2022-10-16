@@ -35,6 +35,9 @@ const Login = () => {
         } else {
           res.json()
             .then((res2) => {
+              localStorage.setItem("full_response", JSON.stringify(res2));
+              localStorage.setItem("userId", res2['id']);
+              localStorage.setItem("token", res2['token']);
               setResObj(res2);
               // console.log(res2);
               // setUserName("");
@@ -56,6 +59,7 @@ const Login = () => {
     <div>
       <Header navbar="login" />
       <h2>This is Login.</h2>
+      <img src='http://localhost:8080/user/loadImg/5'></img>
       <form className="PostForm">
         <div>
           <label>Email</label>
