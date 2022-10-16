@@ -18,6 +18,14 @@ public class TokenInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String currentURL = String.valueOf(request.getRequestURL());
+
+        if(request.getMethod().equals("OPTIONS")){
+            return true;
+        }
+
+        if (currentURL.contains("user/loadImg")) {
+            return true;
+        }
         if (currentURL.endsWith("user/login") || currentURL.endsWith("user/register")) {
             return true;
         }
@@ -25,17 +33,19 @@ public class TokenInterceptor implements HandlerInterceptor {
         String userId = request.getHeader("userId");
 
         if (token == null || token.isBlank()) {
-            throw new Exception("No token");
+            throw new CustomException("No token");
         }
         if (userId == null || userId.isBlank()) {
-            throw new Exception("No userId");
+            throw new CustomException("No userId");
         }
+
+        userService.validateJWT(token);
 
         try {
             Integer intUserId = Integer.parseInt(userId);
             return userService.validateToken(token, intUserId);
         } catch (Exception e) {
-            throw new Exception("User Id should be Integer");
+            throw new CustomException(e.getMessage());
         }
 
 

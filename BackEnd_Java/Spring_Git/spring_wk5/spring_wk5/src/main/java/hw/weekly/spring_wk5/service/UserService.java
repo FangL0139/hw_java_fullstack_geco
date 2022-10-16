@@ -1,15 +1,17 @@
 package hw.weekly.spring_wk5.service;
 
+import hw.weekly.spring_wk5.configuration.CustomException;
 import hw.weekly.spring_wk5.data.UserData;
 import hw.weekly.spring_wk5.model.UserModel;
 import hw.weekly.spring_wk5.repo.UserRepo;
 import hw.weekly.spring_wk5.request.UserRequest;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -19,6 +21,9 @@ public class UserService {
 
     @Autowired
     UserRepo userRepo;
+
+    @Autowired
+    Environment environment;
 
     public UserRequest checkUserId(Integer id) throws Exception {
         if (userData.getMapUsers().containsKey(id)) {
@@ -32,7 +37,8 @@ public class UserService {
         Optional<UserModel> userOpt = userRepo.getUserByEmailAndPassword(email, password);
         if (userOpt.isPresent()) {
             UserModel user = userOpt.get();
-            String token = genTokenForEmail(email);
+//            String token = genTokenForEmail(email);
+            String token = genJWT(user);
             updateTokenById(token, user.getId());
             user.setToken(token);
             return user;
@@ -47,10 +53,24 @@ public class UserService {
         return token;
     }
 
+    private String genJWT(UserModel user) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, 1);
+        String jwtToken = Jwts.builder()
+                .claim("email", user.getEmail())
+                .setSubject(user.getName())
+                .setId(String.valueOf(user.getId()))
+                .setIssuedAt(new Date())
+                .setExpiration(cal.getTime())
+                .signWith(SignatureAlgorithm.HS512, environment.getProperty("JWT_SECRET"))
+                .compact();
+        return jwtToken;
+    }
+
     private void updateTokenById(String token, Integer userId) throws Exception {
         try {
             userRepo.updateTokenByUserId(token, userId);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new Exception("Update fail");
         }
     }
@@ -72,8 +92,25 @@ public class UserService {
         }
     }
 
+    public boolean validateJWT(String token) throws CustomException {
+        Jwts.parser().setSigningKey(environment.getProperty("JWT_SECRET")).parseClaimsJws(token);
+        return true;
+    }
+
     public void logout(Integer userId) throws Exception {
         updateTokenById("", userId);
+    }
+
+    public void updateProfilePic(String profilePic, Integer userId) throws CustomException {
+        try {
+            userRepo.updateProfilePicByUserId(profilePic, userId);
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage());
+        }
+    }
+
+    public UserModel getProfilePic(Integer userId) throws Exception {
+        return userRepo.findById(userId).orElseThrow(() -> new Exception("No user found"));
     }
 
     public void createUser(UserRequest userRequest) throws Exception {

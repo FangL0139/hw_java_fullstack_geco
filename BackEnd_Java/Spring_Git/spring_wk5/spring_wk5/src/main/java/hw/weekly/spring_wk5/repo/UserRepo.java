@@ -23,4 +23,9 @@ public interface UserRepo extends JpaRepository<UserModel, Integer> {
 
     @Query("select user from UserModel user where token = ?1 and id = ?2")
     Optional<UserModel> getUserByUserIdAndToken(String token, Integer userId);
+
+    @Modifying
+    @Transactional
+    @Query("update UserModel set profilepic = ?1 where id =?2")
+    Integer updateProfilePicByUserId(String profilePic, Integer userId);
 }

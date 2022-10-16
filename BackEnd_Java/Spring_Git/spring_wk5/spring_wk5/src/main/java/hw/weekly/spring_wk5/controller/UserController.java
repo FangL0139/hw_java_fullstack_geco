@@ -3,9 +3,15 @@ package hw.weekly.spring_wk5.controller;
 import hw.weekly.spring_wk5.request.UserRequest;
 import hw.weekly.spring_wk5.response.GeneralResponse;
 import hw.weekly.spring_wk5.service.UserService;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 @RestController
 @RequestMapping("user")
@@ -14,6 +20,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    String folderPath = "D:/UploadFiles/";
     @GetMapping("{userId}")
     public ResponseEntity<?> getUser(@PathVariable Integer userId) {
         try {
@@ -91,6 +98,22 @@ public class UserController {
             return ResponseEntity.badRequest().body(new GeneralResponse(e.getMessage()));
         }
 
+    }
+
+    @PostMapping("uploadfile")
+    public ResponseEntity<?> uploadImg(@RequestParam String userId, @RequestParam MultipartFile file) throws Exception {
+        String profilePic = userId +"_"+file.getOriginalFilename();
+        FileOutputStream fout = new FileOutputStream(folderPath+profilePic);
+        fout.write(file.getBytes());
+        userService.updateProfilePic(profilePic,Integer.parseInt(userId));
+        return ResponseEntity.ok("File uploaded: "+profilePic);
+    }
+
+    @GetMapping(value = "loadImg/{userId}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] loadImg(@PathVariable String userId) throws Exception {
+        String profilePic = userService.getProfilePic(Integer.parseInt(userId)).getProfilePic();
+        FileInputStream fin = new FileInputStream(folderPath + profilePic);
+        return IOUtils.toByteArray(fin);
     }
 
 }

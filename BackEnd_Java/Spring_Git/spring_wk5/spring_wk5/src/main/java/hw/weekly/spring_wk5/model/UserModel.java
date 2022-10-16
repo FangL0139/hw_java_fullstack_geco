@@ -22,5 +22,7 @@ public class UserModel {
     @JsonIgnore
     String password;
     String token;
+    @Column(name="profilepic")
+    String profilePic;
 
 }
