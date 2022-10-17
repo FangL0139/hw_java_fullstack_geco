@@ -2,6 +2,8 @@ import React, { Component, useEffect, useState } from 'react'
 import './App.css';
 import Select from 'react-select';
 import Header from './Header';
+import { httpGetWithHeader, httpPostWithHeader } from './HttpFetch';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const ListUser = () => {
   const [userList, setUserList] = useState();
@@ -17,38 +19,48 @@ const ListUser = () => {
   const [address, setAddress] = useState("");
   const [mobile, setMobile] = useState("");
 
+  let navigate = useNavigate();
   let userId = localStorage.getItem("userId");
   let token = localStorage.getItem("token");
 
 
   const getAllUser = () => {
-
-    fetch("http://localhost:8080/user/listuser", {
-      headers: {
-        "content-type": "application/json",
-        "token": token,
-        "userId": userId
-      }
-    })
+    // fetch("http://localhost:8080/user/listuser", {
+    //   headers: {
+    //     "content-type": "application/json",
+    //     "token": token,
+    //     "userId": userId
+    //   }
+    // })
+    httpGetWithHeader("user/listuser", userId, token)
       .then((res) => {
         if (!res.ok) {
           throw res
         } else {
-          res.json()
-            .then((res2) => {
-              setId(res2[0].id);
-              setUserList(res2);
-              // console.log(res2);
-            })
+          return res.json();
         }
+      })
+      .then((res2) => {
+        setId(res2[0].id);
+        setUserList(res2);
+        // console.log(res2);
       })
       .catch((err) => {
         err.json().then(e => { setResObj(e); console.log(e); })
       });
   }
 
+  const checkToken = () => {
+    return !!token;
+  }
+
   useEffect(() => {
-    getAllUser();
+    if (checkToken()) {
+      getAllUser();
+    } else {
+      navigate("/login");
+    }
+
     // setUser(userList[0]);
     // createOptions(userList);
   }, []);
@@ -63,26 +75,32 @@ const ListUser = () => {
       "mobile": mobile,
     };
 
-    fetch("http://localhost:8080/user/update", {
-      method: "POST",
-      body: JSON.stringify(param),
-      headers: {
-        "Content-Type": "application/json",
-        "token": token,
-        "userId": userId
-      },
-    })
+    // fetch("http://localhost:8080/user/update", {
+    //   method: "POST",
+    //   body: JSON.stringify(param),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "token": token,
+    //     "userId": userId
+    //   },
+    // })
+    httpPostWithHeader("user/update", param, userId, token)
       .then((res) => {
         if (!res.ok) {
           throw res
         } else {
-          res.json()
-            .then((res2) => {
-              setResObj(res2);
-              getAllUser();
-              // console.log(res2);
-            })
+          return res.json();
+          // .then((res2) => {
+          //   setResObj(res2);
+          //   getAllUser();
+          //   // console.log(res2);
+          // })
         }
+      })
+      .then((res2) => {
+        setResObj(res2);
+        getAllUser();
+        // console.log(res2);
       })
       .catch((err) => {
         err.json().then(e => { setResObj(e); console.log(e); })
@@ -95,23 +113,29 @@ const ListUser = () => {
   }
 
   const deleteUser = (id) => {
-    fetch("http://localhost:8080/user/delete/" + id, {
-      headers: {
-        "content-type": "application/json",
-        "token": token,
-        "userId": userId
-      }
-    })
+    // fetch("http://localhost:8080/user/delete/" + id, {
+    //   headers: {
+    //     "content-type": "application/json",
+    //     "token": token,
+    //     "userId": userId
+    //   }
+    // })
+    httpGetWithHeader("user/delete/" + id, userId, token)
       .then((res) => {
         if (!res.ok) {
           throw res
         } else {
-          res.json()
-            .then((res2) => {
-              setResObj(res2);
-              // console.log(res2);
-            })
+          return res.json();
+          // .then((res2) => {
+          //   setResObj(res2);
+          //   // console.log(res2);
+          // })
         }
+      })
+      .then((res2) => {
+        setResObj(res2);
+        getAllUser();
+        // console.log(res2);
       })
       .catch((err) => {
         err.json().then(e => { setResObj(e); console.log(e); })

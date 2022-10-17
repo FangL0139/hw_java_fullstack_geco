@@ -55,7 +55,7 @@ public class UserService {
 
     private String genJWT(UserModel user) {
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MINUTE, 1);
+        cal.add(Calendar.MINUTE, 5);
         String jwtToken = Jwts.builder()
                 .claim("email", user.getEmail())
                 .setSubject(user.getName())

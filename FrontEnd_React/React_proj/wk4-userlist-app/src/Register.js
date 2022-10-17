@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import './App.css';
 import Header from './Header';
+import { httpPostWithoutHeader } from './HttpFetch';
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -23,7 +24,7 @@ const Register = () => {
     } else if (mobile == undefined || mobile == "") {
       alert("Please enter the mobile");
     } else {
-      post_Api("http://localhost:8080/user/register");
+      post_Api("user/register");
     }
   }
 
@@ -36,23 +37,30 @@ const Register = () => {
       "mobile": mobile,
     };
 
-    fetch(url, {
-      method: "POST",
-      body: JSON.stringify(param),
-      headers: { "Content-Type": "application/json" },
-    })
+    // fetch(url, {
+    //   method: "POST",
+    //   body: JSON.stringify(param),
+    //   headers: { "Content-Type": "application/json" },
+    // })
+    httpPostWithoutHeader(url, param)
       .then((res) => {
         if (!res.ok) {
           throw res
         } else {
-          res.json()
-            .then((res2) => {
-              setResObj(res2);
-              console.log(res2);
-              // setName("");
-              // setPassword("");
-            })
+          return res.json();
+          // .then((res2) => {
+          //   setResObj(res2);
+          //   console.log(res2);
+          //   // setName("");
+          //   // setPassword("");
+          // })
         }
+      })
+      .then((res2) => {
+        setResObj(res2);
+        console.log(res2);
+        // setName("");
+        // setPassword("");
       })
       .catch((err) => {
         err.json().then(e => { setResObj(e); console.log(e); })

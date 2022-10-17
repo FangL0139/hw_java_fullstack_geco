@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
+import { Navigate, useNavigate } from 'react-router-dom';
 import './App.css';
 import Header from './Header';
+import { httpPostWithoutHeader } from './HttpFetch';
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [resObj, setResObj] = useState();
 
+  let navigate = useNavigate();
   const btn_click = () => {
     // console.log(userName,password);
     if (email == undefined || email == "") {
@@ -14,7 +17,7 @@ const Login = () => {
     } else if (password == undefined || password == "") {
       alert("Please enter the password");
     } else {
-      post_Api("http://localhost:8080/user/login");
+      post_Api("user/login");
     }
   }
 
@@ -24,11 +27,12 @@ const Login = () => {
       "password": password,
     };
 
-    fetch(url, {
-      method: "POST",
-      body: JSON.stringify(param),
-      headers: { "Content-Type": "application/json" },
-    })
+    // fetch(url, {
+    //   method: "POST",
+    //   body: JSON.stringify(param),
+    //   headers: { "Content-Type": "application/json" },
+    // })
+    httpPostWithoutHeader(url, param)
       .then((res) => {
         if (!res.ok) {
           throw res
@@ -39,7 +43,8 @@ const Login = () => {
               localStorage.setItem("userId", res2['id']);
               localStorage.setItem("token", res2['token']);
               setResObj(res2);
-              // console.log(res2);
+              navigate("/listuser");
+              console.log("after login");
               // setUserName("");
               // setPassword("");
             })
@@ -65,7 +70,7 @@ const Login = () => {
           <label>Email</label>
         </div>
         <div>
-          <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Enter UserName"></input>
+          <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Enter Email"></input>
         </div>
         <div>
           <label>Password</label>
