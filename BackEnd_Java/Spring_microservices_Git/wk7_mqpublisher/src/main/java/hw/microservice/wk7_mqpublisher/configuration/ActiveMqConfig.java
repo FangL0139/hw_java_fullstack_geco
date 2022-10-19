@@ -1,0 +1,24 @@
+package hw.microservice.wk7_mqpublisher.configuration;
+
+import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.jms.annotation.EnableJms;
+import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
+
+import javax.jms.ConnectionFactory;
+
+@Configuration
+@EnableJms
+public class ActiveMqConfig {
+
+    @Bean
+    public DefaultJmsListenerContainerFactory myFactory(
+            ConnectionFactory connectionFactory) {
+        DefaultJmsListenerContainerFactory factory =
+                new DefaultJmsListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setConcurrency("5-10");
+        return factory;
+    }
+}
